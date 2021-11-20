@@ -4,15 +4,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
+    GameSelectPanel modeSelectPanel = new GameSelectPanel();
+    GameBoardPanel gameBoardPanel = new GameBoardPanel();
     public MainFrame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setResizable(false);
         setTitle("눈 깜짝할 사이");
-        setSize(1920,1080);
+        setSize(1080,720);
         setVisible(true);
         Container contentPane = getContentPane();
         contentPane.setBackground(Color.BLACK);
-        contentPane.setLayout(new FlowLayout(FlowLayout.CENTER,5,60));
-        Dimension button_size = new Dimension(960,120);
+        contentPane.setLayout(new FlowLayout(FlowLayout.CENTER,5,40));
+        Dimension button_size = new Dimension(720,100);
         JLabel menuTitle = new JLabel("눈 깜짝할 사이");
         menuTitle.setForeground(Color.WHITE);
         menuTitle.setFont(new Font("한초롬바탕",Font.BOLD,70));
@@ -38,18 +41,23 @@ public class MainFrame extends JFrame {
         contentPane.add(checkRanking);
         contentPane.add(gameExplain);
         gamePlay.addActionListener(new gamePlayButtonActionListener());
+        gameExplain.addActionListener(new toBoardActionListener());
     }
-    void changePannel(Container container){
+    void changePanel(Container container){
         this.setContentPane(container);
 
     }
     private class gamePlayButtonActionListener implements ActionListener { //게임 시작 버튼 이벤트 리스너
         @Override
         public void actionPerformed(ActionEvent e) {
-            GameSelectPanel mode = new GameSelectPanel();
-            mode.revalidate();
-            changePannel(mode);
-
+            changePanel(modeSelectPanel);
+            modeSelectPanel.timeAttackButton.addActionListener(new toBoardActionListener());
+        }
+    }
+    private class toBoardActionListener implements ActionListener{
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            changePanel(gameBoardPanel);
         }
     }
 }
