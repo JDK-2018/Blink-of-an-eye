@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 public class MainFrame extends JFrame {
     MainMenuPanel mainMenuPanel = new MainMenuPanel();
     GameSelectPanel modeSelectPanel = new GameSelectPanel();
-    GameBoardPanel gameBoardPanel = new GameBoardPanel();
+    TimeAttackModePlayPanel timeAttackModePlayPanel = new TimeAttackModePlayPanel("easy");
+    TimeAttackDifficultySelectPanel timeAttackDifficultySelectPanel = new TimeAttackDifficultySelectPanel();
     public MainFrame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -15,7 +16,10 @@ public class MainFrame extends JFrame {
         setVisible(true);
         changePanel(mainMenuPanel);
         mainMenuPanel.gamePlay.addActionListener(new ScreenChangeActionListener(modeSelectPanel));
-        modeSelectPanel.timeAttackButton.addActionListener(new ScreenChangeActionListener(gameBoardPanel));
+        modeSelectPanel.timeAttackButton.addActionListener(new ScreenChangeActionListener(timeAttackDifficultySelectPanel));
+        timeAttackDifficultySelectPanel.easyButton.addActionListener(new TimeAttackModeStartActionListener("easy"));
+        timeAttackDifficultySelectPanel.normalButton.addActionListener(new TimeAttackModeStartActionListener("normal"));
+        timeAttackDifficultySelectPanel.hardButton.addActionListener(new TimeAttackModeStartActionListener("hard"));
     }
     void changePanel(Container container){
         this.setContentPane(container);
@@ -28,6 +32,18 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             changePanel(panel);
+        }
+    }
+    private class TimeAttackModeStartActionListener implements ActionListener{
+        String difficulty;
+        public TimeAttackModeStartActionListener(String difficulty){
+            this.difficulty = difficulty;
+        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timeAttackModePlayPanel = new TimeAttackModePlayPanel(difficulty);
+            changePanel(timeAttackModePlayPanel);
+            timeAttackModePlayPanel.gameOverPanel.mainMenuButton.addActionListener(new ScreenChangeActionListener(mainMenuPanel));
         }
     }
 }
