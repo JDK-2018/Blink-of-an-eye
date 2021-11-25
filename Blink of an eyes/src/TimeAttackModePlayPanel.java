@@ -2,15 +2,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimeAttackModePlayPanel extends GameBoardPanel{
     private final int INVISIBLE_DELAY = 3000;
+    private final int TIME_ATTACK = 60;
     private int[][] board = new int[5][5];
     private String difficulty;
     private int maxNumber;
-    private int time = 60;
+    private int time = TIME_ATTACK;
     private int score = 0;
     private int nowNumber = 1; //현재 찾아야할 숫자
     private boolean buttonEnable = false;
@@ -38,7 +40,7 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
         } else if(difficulty == "hard"){
             maxNumber = 10;
         }
-        timerLabel = new JLabel("Timer : 60초");
+        timerLabel = new JLabel("Timer : "+score+"초");
         timerLabel.setFont(new Font("한초롬바탕",Font.PLAIN,50));
         timerLabel.setForeground(Color.WHITE);
         timerLabel.setPreferredSize(new Dimension(360,80));
@@ -49,6 +51,8 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
         scoreLabel.setPreferredSize(new Dimension(360,80));
         leftPanel.add(scoreLabel);
         play();
+        timerTimerTask = timePassing();
+        timer.schedule(timerTimerTask,1000,1000);
     }
     private TimerTask invisibleButtonText(){
         TimerTask task = new TimerTask(){
@@ -56,8 +60,8 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
             public void run() {
                 hideButtonText();
                 buttonEnable = true;
-                timerTimerTask = timePassing();
-                timer.schedule(timerTimerTask,1000,1000);
+                //timerTimerTask = timePassing();
+                //timer.schedule(timerTimerTask,1000,1000);
             }
         };
         return task;
@@ -138,13 +142,13 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
                         leftPanel.setBackground(Color.BLUE);
                         rightPanel.setBackground(Color.BLUE);
                         play();
-                        timerTimerTask.cancel();
+                        //timerTimerTask.cancel();
                     }
                 } else{
                     leftPanel.setBackground(Color.RED);
                     rightPanel.setBackground(Color.RED);
                     play();
-                    timerTimerTask.cancel();
+                    //timerTimerTask.cancel();
                 }
             }
         }
@@ -154,6 +158,7 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
         JLabel finalScoreLabel;
         JLabel initialLAbel;
         JTextField nameTextField;
+        JButton rankingSavingButton;
         JButton restartButton;
         JButton mainMenuButton;
         public GameOverPanel(){
@@ -184,15 +189,16 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
             nameTextField.setForeground(Color.WHITE);
             nameTextField.setSize(240,60);
             nameTextField.setLocation(570,310);
+            rankingSavingButton = new JButton("기록 저장");
             restartButton = new JButton("재시작");
             restartButton.setFont(new Font("한초롬바탕",Font.PLAIN,60));
-            restartButton.setBackground(Color.WHITE);
+            restartButton.setBackground(Color.GRAY);
             restartButton.setForeground(Color.BLACK);
             restartButton.setSize(320,100);
             restartButton.setLocation(120,430);
             mainMenuButton = new JButton("메인메뉴");
             mainMenuButton.setFont(new Font("한초롬바탕",Font.PLAIN,60));
-            mainMenuButton.setBackground(Color.WHITE);
+            mainMenuButton.setBackground(Color.GRAY);
             mainMenuButton.setForeground(Color.BLACK);
             mainMenuButton.setSize(320,100);
             mainMenuButton.setLocation(600,430);
@@ -202,19 +208,74 @@ public class TimeAttackModePlayPanel extends GameBoardPanel{
             this.add(nameTextField);
             this.add(restartButton);
             this.add(mainMenuButton);
-            restartButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    gameOverPanel.setVisible(false);
-                    leftPanel.setVisible(true);
-                    rightPanel.setVisible(true);
-                    time = 60;
-                    timerLabel.setText("Timer : "+time+"초");
-                    score = 0;
-                    scoreLabel.setText("Score : "+score);
-                    play();
-                }
+            mainMenuButton.addActionListener(e->{
+                saveRanking();
+            });
+            restartButton.addActionListener(e -> {
+                gameOverPanel.setVisible(false);
+                leftPanel.setVisible(true);
+                rightPanel.setVisible(true);
+                time = TIME_ATTACK;
+                timerLabel.setText("Timer : "+time+"초");
+                score = 0;
+                scoreLabel.setText("Score : "+score);
+                saveRanking();
+                play();
+                timerTimerTask = timePassing();
+                timer.schedule(timerTimerTask,1000,1000);
             });
         }
+    }
+    boolean saveRanking(){
+        String ranking[] = new String[5];
+        int rankingScore[] = new int[5];
+        int i = 0;
+        int saveIndex = -1;
+        String initial = gameOverPanel.nameTextField.getText();
+        initial = initial.replaceAll(" ","");
+        if(initial.isEmpty()||initial==null) return false;
+        try{
+            BufferedReader br = new BufferedReader(new FileReader("./Ranking/timeattack_ranking_"+difficulty+".txt"));
+            while(true){
+                ranking[i] = br.readLine();
+                if(ranking[i] == null) break;
+                int index = ranking[i].indexOf(" ");
+                rankingScore[i] = Integer.parseInt(ranking[i].substring(index+1));
+                i++;
+            }
+            br.close();
+        } catch(IOException e){
+        }
+        for(int j=0;j<5;j++){
+            if(ranking[j]==null||rankingScore[j]<score){
+                saveIndex = j;
+                break;
+            }
+        }
+        if(saveIndex<0){
+            return false;
+        } else{
+            String temp = ranking[saveIndex];
+            ranking[saveIndex] = initial+" "+score;
+            for(int j=saveIndex+1;j<5;j++){
+                String temp2 = ranking[j];
+                ranking[j] = temp;
+                temp = temp2;
+            }
+        }
+        try{
+            PrintWriter pw = new PrintWriter("./Ranking/timeattack_ranking_"+difficulty+".txt");
+            for(int j=0;j<5;j++){
+                if(ranking[j]==null) break;
+                else {
+                    pw.println(ranking[j]);
+                }
+            }
+            pw.close();
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }
