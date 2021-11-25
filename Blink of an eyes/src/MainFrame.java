@@ -7,6 +7,7 @@ public class MainFrame extends JFrame {
     MainMenuPanel mainMenuPanel = new MainMenuPanel();
     GameSelectPanel modeSelectPanel = new GameSelectPanel();
     GameBoardPanel gameBoardPanel = new GameBoardPanel();
+    RankingPanel rankingPanel= new RankingPanel();
     public MainFrame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -15,6 +16,7 @@ public class MainFrame extends JFrame {
         setVisible(true);
         changePanel(mainMenuPanel);
         mainMenuPanel.gamePlay.addActionListener(new ScreenChangeActionListener(modeSelectPanel));
+        mainMenuPanel.checkRanking.addActionListener(new ScreenChangeActionListener(rankingPanel));
         modeSelectPanel.timeAttackButton.addActionListener(new ScreenChangeActionListener(gameBoardPanel));
     }
     void changePanel(Container container){
