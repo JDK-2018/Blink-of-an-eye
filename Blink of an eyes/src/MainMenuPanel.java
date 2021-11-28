@@ -9,7 +9,7 @@ public class MainMenuPanel extends JPanel {
     public MainMenuPanel(){
         this.setBackground(Color.BLACK);
         this.setLayout(new FlowLayout(FlowLayout.CENTER,5,40));
-        Dimension button_size = new Dimension(720,100);
+        Dimension button_size = new Dimension(720,120);
         menuTitle = new JLabel("눈 깜짝할 사이");
         menuTitle.setForeground(Color.WHITE);
         menuTitle.setFont(new Font("한초롬바탕",Font.BOLD,70));
