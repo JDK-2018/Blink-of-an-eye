@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+
 public class MainMenuPanel extends JPanel {
     JLabel menuTitle;
     JButton gamePlay;

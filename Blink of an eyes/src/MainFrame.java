@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
     void changePanel(Container container){
         this.setContentPane(container);
     }
-    private class ScreenChangeActionListener implements ActionListener{
+    class ScreenChangeActionListener implements ActionListener{
         JPanel panel;
         public ScreenChangeActionListener(JPanel panel){
             this.panel = panel;

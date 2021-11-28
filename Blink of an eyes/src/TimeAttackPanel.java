@@ -1,2 +1,2 @@
-public class HardRankPanel {
+public class TimeAttackPanel {
 }

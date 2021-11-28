@@ -1,2 +1,2 @@
-public class NormalRankPanel {
+public class ChallengeRankPanel {
 }
