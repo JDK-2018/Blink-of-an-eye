@@ -8,6 +8,8 @@ public class MainFrame extends JFrame {
     GameSelectPanel modeSelectPanel = new GameSelectPanel();
     TimeAttackModePlayPanel timeAttackModePlayPanel = new TimeAttackModePlayPanel("easy");
     TimeAttackDifficultySelectPanel timeAttackDifficultySelectPanel = new TimeAttackDifficultySelectPanel();
+    TutorialMode TutorialMode = new TutorialMode();
+
     public MainFrame(){
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -20,6 +22,7 @@ public class MainFrame extends JFrame {
         timeAttackDifficultySelectPanel.easyButton.addActionListener(new TimeAttackModeStartActionListener("easy"));
         timeAttackDifficultySelectPanel.normalButton.addActionListener(new TimeAttackModeStartActionListener("normal"));
         timeAttackDifficultySelectPanel.hardButton.addActionListener(new TimeAttackModeStartActionListener("hard"));
+        modeSelectPanel.tutorialButton.addActionListener(new TutorialModeActionListener(TutorialMode));
     }
     void changePanel(Container container){
         this.setContentPane(container);
@@ -44,6 +47,18 @@ public class MainFrame extends JFrame {
             timeAttackModePlayPanel = new TimeAttackModePlayPanel(difficulty);
             changePanel(timeAttackModePlayPanel);
             timeAttackModePlayPanel.gameOverPanel.mainMenuButton.addActionListener(new ScreenChangeActionListener(mainMenuPanel));
+        }
+    }
+    private  class TutorialModeActionListener implements  ActionListener{
+        public TutorialModeActionListener(TutorialMode tutorialMode) {
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            TutorialMode = new TutorialMode();
+            changePanel(TutorialMode);
+            TutorialMode.MainMenuGo.mainMenuButton.addActionListener(new ScreenChangeActionListener(mainMenuPanel));
+
         }
     }
 }
