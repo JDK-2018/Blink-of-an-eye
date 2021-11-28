@@ -39,6 +39,7 @@ public class GameBoardPanel extends JPanel {
                         buttons[i][j] = new JButton();
                         buttons[i][j].setPreferredSize(button_size);
                         buttons[i][j].setBackground(Color.WHITE);
+                        buttons[i][j].setFont(new Font("한초롬바탕",Font.PLAIN,50));
                         this.add(buttons[i][j]);
                     }
                 }
