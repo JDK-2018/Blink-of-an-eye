@@ -27,6 +27,8 @@ public class MainFrame extends JFrame {
         modeSelectPanel.challengeButton.addActionListener(new ScreenChangeActionListener(challengeDifficultySelectPanel));
         modeSelectPanel.storyButton.addActionListener(new ScreenChangeActionListener(stageSelectPannel));
         modeSelectPanel.tutorialButton.addActionListener(new TutorialModeActionListener(TutorialMode));
+        stageSelectPannel.next.addActionListener(new StoryStageNextActionListener());
+        stageSelectPannel.prev.addActionListener(new StoryStagePrevActionListener());
         timeAttackDifficultySelectPanel.easyButton.addActionListener(new TimeAttackModeStartActionListener("easy"));
         timeAttackDifficultySelectPanel.normalButton.addActionListener(new TimeAttackModeStartActionListener("normal"));
         timeAttackDifficultySelectPanel.hardButton.addActionListener(new TimeAttackModeStartActionListener("hard"));
@@ -120,8 +122,8 @@ public class MainFrame extends JFrame {
                 now = 4;
             stageSelectPannel = new StageSelectPannel(now);
             changePanel(stageSelectPannel);
-            stageSelectPannel.next.addActionListener(new StoryStageNextActionListener());
             stageSelectPannel.prev.addActionListener(new StoryStagePrevActionListener());
+            stageSelectPannel.next.addActionListener(new StoryStageNextActionListener());
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
                     stageSelectPannel.stages[now][i][j].addActionListener(new StoryModeStartActionListener(now, i * 3 + j));
